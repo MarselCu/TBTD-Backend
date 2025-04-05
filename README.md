@@ -1,5 +1,4 @@
-# Terlalu Bagus Tuk Dibuang (Too Good Too Go Clone)
-
+# Terlalu Bagus Tuk Dibuang 
 | Kebutuhan Teknologi      | Teknologi yang Digunakan             |
 | ------------------------ | ------------------------------------- |
 | Backend Framework        | Node.js + Express.js                  |

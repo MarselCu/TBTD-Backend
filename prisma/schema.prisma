@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,3 +6,98 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        Int     @id @default(autoincrement())
+  name      String
+  email     String  @unique
+  password  String
+  phone     String?
+  createdAt DateTime @default(now())
+
+  orders Order[]
+}
+
+model StoreOwner {
+  id        Int     @id @default(autoincrement())
+  name      String
+  email     String  @unique
+  password  String
+  phone     String?
+  isDeleted Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  stores Store[]
+}
+
+model Store {
+  id        Int     @id @default(autoincrement())
+  name      String
+  address   String
+  owner     StoreOwner @relation(fields: [ownerId], references: [id])
+  ownerId   Int
+  isDeleted Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  products  Product[]
+  orders    Order[]
+  admins    StoreAdmin[]
+}
+
+model StoreAdmin {
+  id        Int     @id @default(autoincrement())
+  store     Store   @relation(fields: [storeId], references: [id])
+  storeId   Int
+  email     String  @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id        Int     @id @default(autoincrement())
+  store     Store   @relation(fields: [storeId], references: [id])
+  storeId   Int
+  name      String
+  price     Float
+  stock     Int
+  isDeleted Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  stockHistory StockHistory[]
+  orderItems   OrderItem[]
+}
+
+model StockHistory {
+  id         Int     @id @default(autoincrement())
+  product    Product @relation(fields: [productId], references: [id])
+  productId  Int
+  change     Int
+  reason     String
+  createdAt  DateTime @default(now())
+}
+
+model Order {
+  id         Int     @id @default(autoincrement())
+  user       User    @relation(fields: [userId], references: [id])
+  userId     Int
+  store      Store   @relation(fields: [storeId], references: [id])
+  storeId    Int
+  totalPrice Float
+  status     String  @default("pending") @db.VarChar(20)
+  createdAt  DateTime @default(now())
+
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id         Int     @id @default(autoincrement())
+  order      Order   @relation(fields: [orderId], references: [id])
+  orderId    Int
+  product    Product @relation(fields: [productId], references: [id])
+  productId  Int
+  quantity   Int
+  price      Float
+}
+
+// Custom Trigger for Restoring Stock on Order Cancellation
+// This logic will need to be implemented in backend application logic

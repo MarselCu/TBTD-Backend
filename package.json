@@ -9,15 +9,19 @@
   "keywords": [],
   "author": "MarselCu",
   "license": "GNU GPL V.3",
+  "type": "module",
   "dependencies": {
-    "@prisma/client": "^6.5.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "helmet": "^8.1.0"
   },
   "devDependencies": {
+    "@prisma/client": "^6.5.0",
+    "@types/node": "^22.14.0",
     "nodemon": "^3.1.9",
-    "prisma": "^6.5.0"
+    "prisma": "^6.5.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
   }
 }
